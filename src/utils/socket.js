@@ -1,36 +1,37 @@
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-
-export function useSocket() {
-    const [messages, setMessages] = useState([]);
-    const [socket, setSocket] = useState(null);
-    const [isConnected, setIsConnected] = useState(false); // 追踪连接状态  
+import { message } from 'antd';
+export function useSocket(URL) {
+    const socket = io(URL);
+    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [fooEvents, setFooEvents] = useState([]);
 
     useEffect(() => {
-        const newSocket = io('http://localhost:7001/connection');
-        setSocket(newSocket);
+        function onConnect() {
+            setIsConnected(true);
+            socket.on("disconnect", onDisconnect);
+        }
 
-        newSocket.on('res', (msg) => {
-            setIsConnected(true); // 连接成功时更新状态  
-            console.log('======', msg);
-            setMessages((prevMessages) => [...prevMessages, msg]);
+        function onDisconnect() {
+            setIsConnected(false);
+            message.warning("连接断开");
+        }
+
+        function onFooEvent(value) {
+            setFooEvents((previous) => [...previous, value]);
+        }
+        socket.on("connect", onConnect);
+        socket.on("ping", onFooEvent);
+        socket.on("connects", (data) => {
+            message.success(`${data}`);
         });
-
-        newSocket.on('disconnect', () => {
-            setIsConnected(false); // 连接断开时更新状态  
-        });
-
-        newSocket.on('message', (msg) => {
-            setMessages((prevMessages) => [...prevMessages, msg]);
-        });
-
         return () => {
-            if (newSocket) {
-                newSocket.disconnect();
-            }
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+            socket.off('ping', onFooEvent);
         };
-    }, []);
+    }, [socket, isConnected, fooEvents]);
 
     // 返回socket和messages状态，以及新增的isConnected状态  
-    return { socket, messages, isConnected };
+    return { socket, isConnected, fooEvents };
 }
