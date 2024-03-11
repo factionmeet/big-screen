@@ -1,0 +1,21 @@
+.center-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.center-main .main-left{
+    width: 400px;
+    height: 100%;
+    /* background-color: aliceblue; */
+}
+.center-main .main-right{
+    width: 400px;
+    height: 100%;
+    /* background-color: yellow; */
+}
+.center-main .main-center{
+    flex: 1;
+    height: 100%;
+    /* background-color: aqua; */
+}

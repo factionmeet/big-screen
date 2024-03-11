@@ -1,0 +1,20 @@
+.top-title{
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.top-title .title{
+    position: absolute;
+    font-size: 2.4vw;
+    top:6%;
+}
+.top-header-one{
+    margin-left: -10%;
+}
+.top-header-two{
+    transform: rotate(180deg);
+    margin-right: -10%;
+}
