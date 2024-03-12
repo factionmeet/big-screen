@@ -1,35 +1,10 @@
 import "./index.css";
 import { BorderBox7, Charts } from "@jiaminghi/data-view-react";
-import { message } from "antd";
 import { useSocket } from "../../../hooks/socket";
 export default function MainLeft() {
-  const { socket, isConnected, fooEvents, temperature, humidity } = useSocket(
+  const { isConnected, temperature, humidity } = useSocket(
     "http://localhost:7001/"
   );
-  const buttonEvents = () => {
-    //socket.connect()
-    if (socket.connected) {
-      socket.emit("send", "我需要数据");
-      console.log(
-        "socket",
-        socket,
-        "isConnected",
-        isConnected,
-        "fooEvents",
-        fooEvents
-      );
-      message.success("发送成功");
-      socket.on("res", (data) => {
-        message.success(`接收到来自服务器的广播：${data}`);
-        const result = JSON.parse(data);
-        console.log("result", result);
-        result.humidity ? setHum(result.humidity) : setHum(0);
-        result.temperature ? setTemp(result.temperature) : setTemp(0);
-      });
-    } else {
-      message.error("连接失败");
-    }
-  };
   const humiditys = {
     title: {
       text: "",
@@ -90,7 +65,7 @@ export default function MainLeft() {
         <BorderBox7>
           <h5>连接状态：{isConnected ? "已连接" : "未连接"}</h5>
           {/* <h5>消息：{fooEvents}</h5> */}
-          <button onClick={buttonEvents}>按钮</button>
+          <button>按钮</button>
         </BorderBox7>
       </div>
       <div className="content-center">

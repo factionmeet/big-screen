@@ -17,7 +17,6 @@ export function useSocket(URL) {
             setIsConnected(false);
             message.warning("连接断开");
         }
-
         function onFooEvent(value) {
             //message.success(`我接受到了send数据,temp:${value.temperature},hum:${value.humidity}`);
             setFooEvents(value);
