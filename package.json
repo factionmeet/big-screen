@@ -12,6 +12,8 @@
   "dependencies": {
     "@jiaminghi/data-view-react": "^1.2.5",
     "antd": "^5.15.1",
+    "bizcharts": "^4.1.23",
+    "echarts": "^5.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "socket.io": "^4.7.4",

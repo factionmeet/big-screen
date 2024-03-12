@@ -23,6 +23,11 @@ export default function MainLeft() {
             fill: "#fff",
           },
         },
+        details:{
+          show: true,
+          offset: [0, 40],
+          formatter: "湿度{value}%",
+        },
         axisTick: {
           style: {
             stroke: "#fff",
