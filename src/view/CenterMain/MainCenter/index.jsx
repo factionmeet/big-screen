@@ -1,9 +1,26 @@
 import "./index.css";
 import { BorderBox8 } from "@jiaminghi/data-view-react";
-import { styleInject } from "@jiaminghi/data-view-react/lib/style-inject.es-55d78dad";
 import * as echarts from "echarts";
 import { useEffect } from "react";
 export default function MainCenter() {
+  function randomData() {
+    now = new Date(+now + oneDay);
+    value = value + Math.random() * 21 - 10;
+    return {
+      name: now.toString(),
+      value: [
+        [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+        Math.round(value)
+      ]
+    };
+  }
+  let data = [];
+  let now = new Date(1997, 9, 3);
+  let oneDay = 24 * 3600 * 1000;
+  let value = Math.random() * 1000;
+  for (var i = 0; i < 1000; i++) {
+    data.push(randomData());
+  }
   useEffect(() => {
     const myChart = echarts.init(document.getElementById("charts"));
     const option = {
@@ -15,7 +32,12 @@ export default function MainCenter() {
         top: "3%",
         left: "3%",
       },
-      tooltip: {},
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          animation: false
+        }
+      },
       grid: {
         left: "3%",
         right: "4%",
@@ -23,25 +45,49 @@ export default function MainCenter() {
         containLabel: true,
       },
       xAxis: {
-        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+        type: "time",
+        splitLine: {
+          show: false
+        },
+        /* data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
         axisLabel: {
           color: "white",
-        },
+        }, */
       },
       yAxis: {
+        type: "value",
+        boundaryGap: [0, "100%"],
+        splitLine: {
+          show: false
+        },
         axisLabel: {
           color: "white",
         },
       },
       series: [
         {
-          name: "销量",
+          name: "Fake Data",
           type: "line",
-          data: [5, 20, 36, 10, 10, 20],
+          showSymbol: false,
+          data: data
         },
       ],
     };
-    myChart.setOption(option);
+    //myChart.setOption(option);
+    setInterval(function () {
+      for (var i = 0; i < 5; i++) {
+        data.shift();
+        data.push(randomData());
+      }
+      myChart.setOption({
+        series: [
+          {
+            data: data
+          }
+        ]
+      });
+    }, 1000);
+    option && myChart.setOption(option);
   });
   return (
     <div className="center-content">

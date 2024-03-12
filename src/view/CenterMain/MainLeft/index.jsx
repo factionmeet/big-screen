@@ -15,18 +15,26 @@ export default function MainLeft() {
     series: [
       {
         type: "gauge",
+        radius: "95%",
         data: [{ name: "itemA", value: humidity }],
         center: ["50%", "55%"],
+        min: 0,
+        max: 100,
+        splitNum : 11,
         axisLabel: {
           formatter: "{value}%",
           style: {
             fill: "#fff",
           },
+          fontSize: 12
         },
         details:{
           show: true,
           offset: [0, 40],
           formatter: "湿度{value}%",
+          style: {
+            fill: "white"
+          }
         },
         axisTick: {
           style: {
@@ -47,18 +55,31 @@ export default function MainLeft() {
     series: [
       {
         type: "gauge",
+        radius: "95%",
         data: [{ name: "itemA", value: temperature }],
-        center: ["50℃", "55℃"],
+        center: ["50%", "55%"],
+        min: -40,
+        max: 125,
+        splitNum : 8,
         axisLabel: {
           formatter: "{value}℃",
           style: {
             fill: "#fff",
           },
         },
+        details:{
+          show: true,
+          offset: [0, 40],
+          formatter: "温度{value}℃",
+          style: {
+            fill: "white"
+          }
+        },
         axisTick: {
           style: {
             stroke: "#fff",
           },
+          tickLength: 10
         },
         animationCurve: "easeInOutBack",
       },
