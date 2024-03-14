@@ -1,10 +1,12 @@
 import "./index.css";
-import { BorderBox7, Charts } from "@jiaminghi/data-view-react";
-import { useSocket } from "../../../hooks/socket";
-export default function MainLeft() {
-  const { isConnected, temperature, humidity } = useSocket(
-    "http://localhost:7001/"
-  );
+import { BorderBox7, Charts, DigitalFlop } from "@jiaminghi/data-view-react";
+import { useEffect } from "react";
+//import { useSocket } from "../../../hooks/socket";
+import { useState } from "react";
+export default function MainLeft(props) {
+  // eslint-disable-next-line react/prop-types
+  const { temperature, humidity, gatherSum } = props;
+  console.log("props=========",props);
   const humiditys = {
     title: {
       text: "",
@@ -20,21 +22,21 @@ export default function MainLeft() {
         center: ["50%", "55%"],
         min: 0,
         max: 100,
-        splitNum : 11,
+        splitNum: 11,
         axisLabel: {
           formatter: "{value}%",
           style: {
             fill: "#fff",
           },
-          fontSize: 12
+          fontSize: 12,
         },
-        details:{
+        details: {
           show: true,
           offset: [0, 40],
           formatter: "湿度{value}%",
           style: {
-            fill: "white"
-          }
+            fill: "white",
+          },
         },
         axisTick: {
           style: {
@@ -60,38 +62,54 @@ export default function MainLeft() {
         center: ["50%", "55%"],
         min: -40,
         max: 125,
-        splitNum : 8,
+        splitNum: 8,
         axisLabel: {
           formatter: "{value}℃",
           style: {
             fill: "#fff",
           },
         },
-        details:{
+        details: {
           show: true,
           offset: [0, 40],
           formatter: "温度{value}℃",
           style: {
-            fill: "white"
-          }
+            fill: "white",
+          },
         },
         axisTick: {
           style: {
             stroke: "#fff",
           },
-          tickLength: 10
+          tickLength: 10,
         },
         animationCurve: "easeInOutBack",
       },
     ],
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const config2 = {
+    number: [999],
+    content: "已采集{nt}次",
+  };
+  const [config, setConfig] = useState(config2);
+  useEffect(() =>{
+    const Qiehuan = (gatherSum) => {
+      config2.number = [gatherSum];
+      setConfig(config2);
+    };
+    Qiehuan(gatherSum)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gatherSum])
   return (
     <div className="left-content">
-      <div className="content-top">
+      <div className="content-top" >
         <BorderBox7>
-          <h5>连接状态：{isConnected ? "已连接" : "未连接"}</h5>
-          {/* <h5>消息：{fooEvents}</h5> */}
-          <button>按钮</button>
+          <DigitalFlop
+            config={config}
+
+            style={{ width: "200px", height: "50px", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+          />
         </BorderBox7>
       </div>
       <div className="content-center">

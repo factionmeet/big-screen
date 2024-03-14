@@ -1,49 +1,94 @@
+import { useEffect, useState } from "react";
 import "./index.css";
-import { BorderBox7,ScrollBoard } from "@jiaminghi/data-view-react";
-export default function MainRight() {
-  const config = {
-    header: ['时间', '温度', '湿度'],
-    data: [
-      ['<span style="color:#37a2da;">行1列1</span>', '行1列2', '行1列3'],
-      ['行2列1', '<span style="color:#32c5e9;">行2列2</span>', '行2列3'],
-      ['行3列1', '行3列2', '<span style="color:#67e0e3;">行3列3</span>'],
-      ['行4列1', '<span style="color:#9fe6b8;">行4列2</span>', '行4列3'],
-      ['<span style="color:#ffdb5c;">行5列1</span>', '行5列2', '行5列3'],
-      ['行6列1', '<span style="color:#ff9f7f;">行6列2</span>', '行6列3'],
-      ['行7列1', '行7列2', '<span style="color:#fb7293;">行7列3</span>'],
-      ['行8列1', '<span style="color:#e062ae;">行8列2</span>', '行8列3'],
-      ['<span style="color:#e690d1;">行9列1</span>', '行9列2', '行9列3'],
-      ['行10列1', '<span style="color:#e7bcf3;">行10列2</span>', '行10列3'],
-      ['<span style="color:#37a2da;">行1列1</span>', '行1列2', '行1列3'],
-      ['行2列1', '<span style="color:#32c5e9;">行2列2</span>', '行2列3'],
-      ['行3列1', '行3列2', '<span style="color:#67e0e3;">行3列3</span>'],
-      ['行4列1', '<span style="color:#9fe6b8;">行4列2</span>', '行4列3'],
-      ['<span style="color:#ffdb5c;">行5列1</span>', '行5列2', '行5列3'],
-      ['行6列1', '<span style="color:#ff9f7f;">行6列2</span>', '行6列3'],
-      ['行7列1', '行7列2', '<span style="color:#fb7293;">行7列3</span>'],
-      ['行8列1', '<span style="color:#e062ae;">行8列2</span>', '行8列3'],
-      ['<span style="color:#e690d1;">行9列1</span>', '行9列2', '行9列3'],
-      ['行10列1', '<span style="color:#e7bcf3;">行10列2</span>', '行10列3'],
-      ['<span style="color:#37a2da;">行1列1</span>', '行1列2', '行1列3'],
-      ['行2列1', '<span style="color:#32c5e9;">行2列2</span>', '行2列3'],
-      ['行3列1', '行3列2', '<span style="color:#67e0e3;">行3列3</span>'],
-      ['行4列1', '<span style="color:#9fe6b8;">行4列2</span>', '行4列3'],
-      ['<span style="color:#ffdb5c;">行5列1</span>', '行5列2', '行5列3'],
-      ['行6列1', '<span style="color:#ff9f7f;">行6列2</span>', '行6列3'],
-      ['行7列1', '行7列2', '<span style="color:#fb7293;">行7列3</span>'],
-      ['行8列1', '<span style="color:#e062ae;">行8列2</span>', '行8列3'],
-      ['<span style="color:#e690d1;">行9列1</span>', '行9列2', '行9列3'],
-      ['行10列1', '<span style="color:#e7bcf3;">行10列2</span>', '行10列3']
-    ],
-    index: true,
-    columnWidth: [50],
+import { BorderBox7, ScrollBoard } from "@jiaminghi/data-view-react";
+import { cloneDeep } from "lodash";
+import { Loading } from "@jiaminghi/data-view-react";
+export default function MainRight(props) {
+  // eslint-disable-next-line react/prop-types
+  const { temperature, humidity, gatherDate, thirtyDataList } = props;
+  //let [configData, setConfigData] = useState([]);
+  let config = {
+    header: ["时间", "温度(℃)", "湿度(%)"],
+    data: (function(){
+      let res = []
+      // eslint-disable-next-line react/prop-types
+      const len = thirtyDataList.length
+      for(let i = 0; i < len; i++){
+        const item = thirtyDataList[i]
+        // eslint-disable-next-line react/prop-types
+        const date = new Date(item.createdAt);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1);
+        const day = date.getDate();
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const seconds = date.getSeconds()
+        const newDateStr = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        // eslint-disable-next-line react/prop-types
+        res.push([newDateStr, item.temperature, item.humidity])
+      }
+      console.log("thirtyDataList格式化1", res);
+      return res;
+    })() /* [["2024/3/12 08:00:00", "12", "33"]] */,
+    index: false,
+    columnWidth: [270, 100, 100],
     rowNum: 15,
-    align: ['center']
-  }
+    align: ["center", "center", "center", "center"],
+    carousel: 'single'
+  };
+  const [configs, setConfigs] = useState(config);
+  console.log("right", props);
+  useEffect(() => {
+    function setConfigEvent(temperature, humidity, gatherDate) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      if (!gatherDate) {
+        return;
+      }
+      const date = new Date(gatherDate);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1);
+      const day = date.getDate();
+      const hours = date.getHours()
+      const minutes = date.getMinutes()
+      const seconds = date.getSeconds()
+      const newDateStr = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+      // if (configData.length === 15) {
+      //   setConfigData(
+      //     configData.filter((item, index) => index != 0)
+      //   )
+      // }
+      // configData.push([newDateStr, temperature, humidity]);
+      // setConfigData([
+      //   ...configData,
+      //   [newDateStr, temperature, humidity],
+      // ])
+      // console.log("data", configData);
+      // console.log("config", config);
+      // setConfigs(config);
+      const newOption = cloneDeep(configs);
+      const newData = newOption.data
+      newData.shift()
+      newData.push([newDateStr, temperature, humidity])
+      setConfigs(newOption)
+
+    }
+    setConfigEvent(temperature, humidity, gatherDate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [temperature, humidity, gatherDate]);
   return (
     <div className="right-content">
       <BorderBox7>
-        <ScrollBoard config={config} style={{width: '100%', height: '100%'}} />
+      {
+      // eslint-disable-next-line react/prop-types
+      thirtyDataList.length === 0 ? (
+        <Loading style={{ height: "100%", width: "100%" }} />
+      ) : (
+        <ScrollBoard
+          config={configs}
+          style={{ width: "100%", height: "100%" }}
+        />
+      )}
       </BorderBox7>
     </div>
   );

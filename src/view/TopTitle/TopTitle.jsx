@@ -3,7 +3,7 @@ import "./TopTitle.css";
 export default function TopTitle() {
   return (
     <div className="top-title">
-      <span className="title">数据可视化系统看板</span>
+      <span className="title">室内温湿度采集系统看板</span>
       <Decoration1
         className="top-header-one"
         style={{ width: "20%", height: "80%" }}
